@@ -24,31 +24,59 @@
             border: 1px solid #000;
             background-color: #f0f0f0;
             border-radius: 5px;
+            position: relative;
         }
         .word-button:hover {
             background-color: #d0d0d0;
+        }
+        .tooltip {
+            visibility: hidden;
+            background-color: black;
+            color: white;
+            text-align: center;
+            padding: 5px;
+            border-radius: 5px;
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+        }
+        .word-button:hover .tooltip {
+            visibility: visible;
         }
     </style>
 </head>
 <body>
     <h1>Word Pronunciation Practice</h1>
-    <p>Click on a word to hear its pronunciation.</p>
+    <p>Click on a word to hear its pronunciation. Hover over it to see the translation.</p>
     <div class="word-container" id="wordContainer"></div>
     
     <script>
         const words = [
-            "ask", "bottle", "build", "careful", "change", "drive", "grow", "poor", "remember", "teach", 
-            "battery", "brave", "dangerous", "environment", "grass", "honey", "onion", "plant", "storm", "vegetable"
+            { en: "ask", he: "לשאול" }, { en: "bottle", he: "בקבוק" }, { en: "build", he: "לבנות" }, 
+            { en: "careful", he: "זהיר" }, { en: "change", he: "לשנות" }, { en: "drive", he: "לנהוג" },
+            { en: "grow", he: "לגדול" }, { en: "poor", he: "עני" }, { en: "remember", he: "לזכור" }, 
+            { en: "teach", he: "ללמד" }, { en: "battery", he: "סוללה" }, { en: "brave", he: "אמיץ" },
+            { en: "dangerous", he: "מסוכן" }, { en: "environment", he: "סביבה" }, { en: "grass", he: "דשא" },
+            { en: "honey", he: "דבש" }, { en: "onion", he: "בצל" }, { en: "plant", he: "צמח" },
+            { en: "storm", he: "סערה" }, { en: "vegetable", he: "ירק" }
         ];
         
         const container = document.getElementById("wordContainer");
         
-        words.forEach(word => {
+        words.forEach(wordObj => {
             const button = document.createElement("button");
             button.className = "word-button";
-            button.innerText = word;
+            button.innerText = wordObj.en;
+            
+            const tooltip = document.createElement("span");
+            tooltip.className = "tooltip";
+            tooltip.innerText = wordObj.he;
+            
+            button.appendChild(tooltip);
             button.onclick = () => {
-                const utterance = new SpeechSynthesisUtterance(word);
+                const utterance = new SpeechSynthesisUtterance(wordObj.en);
                 utterance.lang = "en-US";
                 speechSynthesis.speak(utterance);
             };
